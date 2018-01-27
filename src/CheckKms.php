@@ -36,6 +36,6 @@ class CheckKms extends Check implements CheckInterface {
             $err = socket_strerror(socket_last_error());
         }
         socket_close($socket);
-        return new Result(__CLASS__, $addr, $port, $ok, $err);
+        return new Result(static::class, $addr, $port, $ok, $err);
     }
 }

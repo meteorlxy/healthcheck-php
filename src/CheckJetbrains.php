@@ -55,6 +55,6 @@ class CheckJetbrains extends Check implements CheckInterface {
             $ok = false;
             $err = 'response body not contain substr, body: ' . $res;
         }
-        return new Result(__CLASS__, $addr, $port, $ok, $err);
+        return new Result(static::class, $addr, $port, $ok, $err);
     }
 }

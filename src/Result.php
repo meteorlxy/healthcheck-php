@@ -24,7 +24,7 @@ class Result {
     /**
      * Create a new healthcheck result instance.
      *
-     * @param  string   $checkName
+     * @param  string   $check_name
      * @param  string   $addr
      * @param  int      $port
      * @param  bool     $ok
@@ -32,9 +32,9 @@ class Result {
      * 
      * @return void
      */
-    public function __construct(string $checkName, string $addr, int $port = 0, bool $ok = true, string $err = '') {
+    public function __construct(string $check_name, string $addr, int $port = 0, bool $ok = true, string $err = '') {
         $this->data = [
-            'checkName' => $checkName,
+            'check_name' => $check_name,
             'addr' => $addr,
             'port' => $port,
             'ok' => $ok,
@@ -50,6 +50,15 @@ class Result {
      */
     public function json() {
         return json_encode($this->data);
+    }
+    
+    /**
+     * Get the data of the result.
+     * 
+     * @return array
+     */
+    public function getData() {
+        return $this->data;
     }
     
     /**
