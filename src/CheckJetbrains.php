@@ -44,7 +44,7 @@ class CheckJetbrains extends Check implements CheckInterface {
      * 
      * @return \Xjtuana\HealthCheck\Result
      */
-    public function checkAtOnce(string $addr, int $port, int $timeout): Result {
+    public function checkAtOnce(string $addr, int $port = 0, int $timeout = 3): Result {
         $res = $this->http()->get(0 === strpos($addr, 'http') ? $addr : 'http://' . $addr, [
             'timeout' => $timeout,
             'connect_timeout' => $timeout,
