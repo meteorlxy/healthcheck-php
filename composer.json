@@ -1,0 +1,30 @@
+{
+    "name": "xjtuana/healthcheck",
+    "description": "Health Check of xjtuana benifits. PHP version",
+    "keywords": ["xjtuana"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xczh",
+            "email": "xczh.me@foxmail.com",
+        },
+        {
+            "name": "meteorlxy",
+            "email": "meteor.lxy@foxmail.com",
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xjtuana\\HealthCheck\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "v1.x-dev"
+        }
+    }
+}
