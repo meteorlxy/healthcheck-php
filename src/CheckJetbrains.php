@@ -17,6 +17,25 @@ use GuzzleHttp\Client;
 class CheckJetbrains extends Check implements CheckInterface {
     
     /**
+     * Instance of Http Client.
+     * 
+     * @var \GuzzleHttp\Client
+     */
+    protected $http;
+    
+    /**
+     * Get the instance of Http Client.
+     * 
+     * @return \GuzzleHttp\Client
+     */
+    protected function http() {
+        if (! $this->http instanceof Client) {
+            $this->http = new Client();
+        }
+        return $this->http;
+    }
+    
+    /**
      * Check the health of the service at once (without cache).
      * 
      * @param  string   $addr       host address
@@ -26,16 +45,15 @@ class CheckJetbrains extends Check implements CheckInterface {
      * @return \Xjtuana\HealthCheck\Result
      */
     public function checkAtOnce(string $addr, int $port, int $timeout): Result {
-        $http = new Client();
-        $res = $http->get($addr, [
+        $res = $this->http()->get(0 === strpos($addr, 'http') ? $addr : 'http://' . $addr, [
             'timeout' => $timeout,
             'connect_timeout' => $timeout,
-        ]);
+        ])->getBody()->getContents();
         $ok = true;
         $err = '';
-        if (false === strpos($res->getBody()->getContents(), "Jetbrains License Server")) {
+        if (false === strpos($res, 'Jetbrains License Server')) {
             $ok = false;
-            $err = "response body not contain substr, body: " . $res[1];
+            $err = 'response body not contain substr, body: ' . $res;
         }
         return new Result(__CLASS__, $addr, $port, $ok, $err);
     }

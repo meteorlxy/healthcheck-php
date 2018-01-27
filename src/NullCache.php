@@ -34,7 +34,7 @@ class NullCache implements CacheInterface {
      * 
      * @return bool
      */
-    public function set(string $key, string $value, int $ttl = 0): bool {
+    public function set(string $key, $value, int $ttl = 0): bool {
         return true;
     }
 }

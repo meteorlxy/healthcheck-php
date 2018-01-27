@@ -7,11 +7,11 @@
     "authors": [
         {
             "name": "xczh",
-            "email": "xczh.me@foxmail.com",
+            "email": "xczh.me@foxmail.com"
         },
         {
             "name": "meteorlxy",
-            "email": "meteor.lxy@foxmail.com",
+            "email": "meteor.lxy@foxmail.com"
         }
     ],
     "require": {
@@ -24,7 +24,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "v1.x-dev"
+            "dev-master": "v0.x-dev"
         }
     }
 }
