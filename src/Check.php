@@ -52,11 +52,14 @@ abstract class Check implements CheckInterface {
      * 
      * @return \Xjtuana\HealthCheck\Result
      */
-    final public function check(string $addr, int $port = 0, int $timeout = 3): Result {
+    final public function check(string $addr, int $port = 0, int $timeout = 3, int $ttl = 30): Result {
         $key = sprintf("%s::%s:%d", static::class, $addr, $port);
-        $result = $this->cache()->get($key) ?? $this->checkAtOnce($addr, $port, $timeout);
-        if (false === $this->cache()->set($key, $result)) {
-            throw new \Exception('set cache error: checker('.static::class.'), key('.$key.'), result('.$result.').');
+        $result = $this->cache()->get($key);
+        if (empty($result)) {
+            $result = $this->checkAtOnce($addr, $port, $timeout);
+            if (false === $this->cache()->set($key, $result, $ttl)) {
+                throw new \Exception('set cache error: checker('.static::class.'), key('.$key.'), result('.$result.').');
+            }
         }
         return $result;
     }
