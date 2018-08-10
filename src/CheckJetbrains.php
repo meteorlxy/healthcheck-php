@@ -45,15 +45,20 @@ class CheckJetbrains extends Check implements CheckInterface {
      * @return \Xjtuana\HealthCheck\Result
      */
     public function checkAtOnce(string $addr, int $port = 0, int $timeout = 3): Result {
-        $res = $this->http()->get((0 === strpos($addr, 'http') ? $addr : 'http://' . $addr) . ($port ? ':' . $port : ''), [
-            'timeout' => $timeout,
-            'connect_timeout' => $timeout,
-        ])->getBody()->getContents();
-        $ok = true;
-        $err = '';
-        if (false === strpos($res, 'Jetbrains License Server')) {
+        try {
+            $res = $this->http()->get((0 === strpos($addr, 'http') ? $addr : 'http://' . $addr) . ($port ? ':' . $port : ''), [
+                'timeout' => $timeout,
+                'connect_timeout' => $timeout,
+            ])->getBody()->getContents();
+            $ok = true;
+            $err = '';
+            if (false === strpos($res, 'Jetbrains License Server')) {
+                $ok = false;
+                $err = 'response body not contain substr, body: ' . $res;
+            }
+        } catch (\Exception $e) {
             $ok = false;
-            $err = 'response body not contain substr, body: ' . $res;
+            $err = $e->getMessage();
         }
         return new Result(static::class, $addr, $port, $ok, $err);
     }

@@ -23,19 +23,24 @@ class CheckShadowsocks extends Check implements CheckInterface {
      * @return \Xjtuana\HealthCheck\Result
      */
     public function checkAtOnce(string $addr, int $port = 0, int $timeout = 3): Result {
-        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        if (!$socket) {
-            $errno = socket_last_error();
-            throw new \Exception("socket create error:" . socket_strerror($errno), $errno);
+        try {
+            $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+            if (!$socket) {
+                $errno = socket_last_error();
+                throw new \Exception("socket create error:" . socket_strerror($errno), $errno);
+            }
+            socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
+            socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $timeout, 'usec' => 0));
+            $ok = @socket_connect($socket, $addr, $port);
+            $err = "";
+            if (!$ok) {
+                $err = socket_strerror(socket_last_error());
+            }
+            socket_close($socket);
+        } catch (\Exception $e) {
+            $ok = false;
+            $err = $e->getMessage();
         }
-        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
-        socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $timeout, 'usec' => 0));
-        $ok = @socket_connect($socket, $addr, $port);
-        $err = "";
-        if (!$ok) {
-            $err = socket_strerror(socket_last_error());
-        }
-        socket_close($socket);
         return new Result(static::class, $addr, $port, $ok, $err);
     }
 }
